@@ -202,6 +202,12 @@ if [ -n "$USB" ]; then
   echo "parameter: ${FLAGS_USB}"
 fi
 
+if [ "$BALLOON" == "1" ]; then
+  echo "[balloon]"
+  FLAGS_BALLOON="-device virtio-balloon"
+  echo "parameter: ${FLAGS_BALLOON}"
+fi
+
 if [ -n "$FLAGS_OTHER" ]; then
   echo "[other]"
   echo "parameters: ${FLAGS_OTHER}"
@@ -209,8 +215,13 @@ fi
 
 set -x
 exec /usr/bin/kvm ${FLAGS_REMOTE_ACCESS} \
-  -k en-us -m ${RAM} -smp ${SMP} -cpu ${FLAGS_CPU} -no-shutdown \
+  -k en-us \
+  -m ${RAM} \
+  -smp ${SMP} \
+  -cpu ${FLAGS_CPU} \
+  -no-shutdown \
   -name ${HOSTNAME} \
+  ${FLAGS_BALLOON} \
   ${FLAGS_DISK_IMAGE} \
   ${FLAGS_FLOPPY_IMAGE} \
   ${FLAGS_ISO} \
